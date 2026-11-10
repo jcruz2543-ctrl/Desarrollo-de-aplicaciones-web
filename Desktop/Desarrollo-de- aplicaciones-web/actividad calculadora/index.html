@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Calculadora web moderna CRUZ FAJARDO - VÉLEZ SÁNCHEZ">
+
+    <title>CRUZ FAJARDO | Calculadora</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+
+    <main class="contenedor">
+
+        <header class="encabezado">
+            <div class="logo">
+                <div class="logo-icon">CF</div>
+                <div>
+                    <h1>CRUZ FAJARDO</h1>
+                    <p>VÉLEZ SÁNCHEZ · CALCULATOR</p>
+                </div>
+            </div>
+
+            <span class="version">EDITION 2026</span>
+        </header>
+
+        <section class="calculadora" aria-label="Calculadora digital">
+
+            <div class="top-bar">
+                <span class="status">
+                    <span class="status-dot"></span>
+                    CALCULADORA ONLINE
+                </span>
+
+                <span class="mode">STANDARD</span>
+            </div>
+
+            <section class="pantalla" aria-live="polite" aria-atomic="true">
+
+                <div class="operacion-previa" id="previa">
+                    Bienvenido
+                </div>
+
+                <div class="resultado" id="actual">0</div>
+
+                <div class="display-footer">
+                    <span>RESULTADO</span>
+                    <span class="display-indicator">●</span>
+                </div>
+
+            </section>
+
+            <section class="teclado" aria-label="Teclado de operaciones">
+
+                <button class="btn btn-function" data-accion="limpiar">AC</button>
+                <button class="btn btn-function" data-accion="borrar" aria-label="Borrar último dígito">⌫</button>
+                <button class="btn btn-function" data-accion="porcentaje">%</button>
+                <button class="btn btn-operator" data-operador="÷">÷</button>
+
+                <button class="btn" data-numero="7">7</button>
+                <button class="btn" data-numero="8">8</button>
+                <button class="btn" data-numero="9">9</button>
+                <button class="btn btn-operator" data-operador="×">×</button>
+
+                <button class="btn" data-numero="4">4</button>
+                <button class="btn" data-numero="5">5</button>
+                <button class="btn" data-numero="6">6</button>
+                <button class="btn btn-operator" data-operador="−">−</button>
+
+                <button class="btn" data-numero="1">1</button>
+                <button class="btn" data-numero="2">2</button>
+                <button class="btn" data-numero="3">3</button>
+                <button class="btn btn-operator" data-operador="+">+</button>
+
+                <button class="btn btn-function" data-accion="signo">±</button>
+                <button class="btn" data-numero="0">0</button>
+                <button class="btn" data-accion="punto">.</button>
+                <button class="btn btn-equal" data-accion="igual">=</button>
+
+            </section>
+
+            <footer class="pie-calculadora">
+                <span>PRECISIÓN DIGITAL</span>
+                <span>✦</span>
+                <span>EXPERIENCIA INTELIGENTE</span>
+            </footer>
+
+        </section>
+
+        <footer class="pie-pagina">
+            <p>DESIGNED BY <strong>CRUZ FAJARDO – VÉLEZ SÁNCHEZ</strong></p>
+            <span>© 2026 · ALL RIGHTS RESERVED</span>
+        </footer>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
