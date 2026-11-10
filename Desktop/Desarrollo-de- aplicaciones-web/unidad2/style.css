@@ -1,120 +1,398 @@
-/* ===== Variables de diseño ===== */
+/* ==============================
+   CONFIGURACIÓN GENERAL
+============================== */
+
 :root {
-  --fondo: #0f172a;
-  --carcasa: #1e293b;
-  --pantalla: #0b1220;
-  --tecla: #334155;
-  --tecla-hover: #475569;
-  --accion: #64748b;
-  --accion-hover: #7b8ba1;
-  --operador: #f59e0b;
-  --operador-hover: #fbbf24;
-  --igual: #10b981;
-  --igual-hover: #34d399;
-  --texto: #f8fafc;
-  --texto-suave: #94a3b8;
-  --radio: 16px;
+    --background: #080d1a;
+    --surface: #111a2d;
+    --surface-light: #1b2942;
+    --primary: #00d4ff;
+    --secondary: #7c5cff;
+    --accent: #ff9f43;
+    --text: #ffffff;
+    --muted: #8190aa;
+    --border: rgba(255,255,255,0.08);
 }
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: radial-gradient(circle at top, #1e3a5f 0%, var(--fondo) 60%);
-  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
-  color: var(--texto);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 15px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    background: var(--background);
+    overflow-x: hidden;
+    position: relative;
 }
 
-/* ===== Carcasa ===== */
+/* ==============================
+   FONDO ANIMADO
+============================== */
+
+.background-glow {
+    position: fixed;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.22;
+    pointer-events: none;
+}
+
+.glow-one {
+    background: var(--primary);
+    top: -100px;
+    left: -100px;
+}
+
+.glow-two {
+    background: var(--secondary);
+    bottom: -100px;
+    right: -100px;
+}
+
+/* ==============================
+   CONTENEDOR
+============================== */
+
+.contenedor {
+    width: 100%;
+    max-width: 430px;
+    position: relative;
+    z-index: 2;
+}
+
+/* ==============================
+   ENCABEZADO
+============================== */
+
+.encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 17px;
+    color: #06101b;
+    background: linear-gradient(135deg, var(--primary), #8bdeff);
+    box-shadow: 0 0 25px rgba(0,212,255,0.25);
+}
+
+.logo h1 {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.logo p {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+}
+
+.version {
+    font-size: 9px;
+    color: var(--primary);
+    letter-spacing: 1px;
+    border: 1px solid rgba(0,212,255,0.25);
+    border-radius: 20px;
+    padding: 7px 10px;
+}
+
+/* ==============================
+   CALCULADORA
+============================== */
+
 .calculadora {
-  width: 100%;
-  max-width: 340px;
-  padding: 20px;
-  background: var(--carcasa);
-  border-radius: 24px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    background: linear-gradient(
+        145deg,
+        rgba(24,36,59,0.98),
+        rgba(11,18,32,0.98)
+    );
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,0.5),
+        inset 0 1px 1px rgba(255,255,255,0.05);
+
+    backdrop-filter: blur(20px);
 }
 
-/* ===== Pantalla ===== */
+/* ==============================
+   BARRA SUPERIOR
+============================== */
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.status {
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #a8b5ca;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #35df9c;
+    border-radius: 50%;
+    margin-right: 5px;
+    box-shadow: 0 0 10px #35df9c;
+}
+
+.mode {
+    color: var(--primary);
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+/* ==============================
+   PANTALLA
+============================== */
+
 .pantalla {
-  min-height: 110px;
-  margin-bottom: 18px;
-  padding: 14px 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-end;
-  gap: 6px;
-  background: var(--pantalla);
-  border-radius: var(--radio);
-  overflow: hidden;
-  word-break: break-all;
-  text-align: right;
+    min-height: 155px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    text-align: right;
+    padding: 22px 18px;
+    margin-bottom: 22px;
+    border-radius: 20px;
+    border: 1px solid rgba(0,212,255,0.12);
+
+    background: linear-gradient(
+        135deg,
+        #080f1d,
+        #101c31
+    );
+
+    box-shadow: inset 0 5px 20px rgba(0,0,0,0.3);
 }
 
 .operacion-previa {
-  min-height: 20px;
-  font-size: 0.95rem;
-  color: var(--texto-suave);
+    color: var(--muted);
+    min-height: 24px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .resultado {
-  font-size: 2.6rem;
-  font-weight: 600;
-  line-height: 1.1;
+    color: #ffffff;
+    font-size: clamp(32px, 9vw, 45px);
+    font-weight: 600;
+    letter-spacing: -2px;
+    margin: 10px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 0 20px rgba(0,212,255,0.15);
 }
 
-.resultado.largo   { font-size: 1.9rem; }
-.resultado.muy-largo { font-size: 1.4rem; }
-.resultado.error   { font-size: 1.1rem; color: #f87171; }
+.display-footer {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 2px;
+}
 
-/* ===== Teclado ===== */
+.display-indicator {
+    color: var(--primary);
+}
+
+/* ==============================
+   TECLADO
+============================== */
+
 .teclado {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
 }
 
 .btn {
-  height: 62px;
-  border: none;
-  border-radius: var(--radio);
-  background: var(--tecla);
-  color: var(--texto);
-  font-size: 1.35rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.08s;
+    height: 68px;
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 18px;
+    background: var(--surface-light);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 21px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.btn:hover  { background: var(--tecla-hover); }
-.btn:active { transform: scale(0.94); }
+.btn:hover {
+    background: #263957;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.btn:active {
+    transform: scale(0.93);
+}
+
 .btn:focus-visible {
-  outline: 3px solid #38bdf8;
-  outline-offset: 2px;
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
 }
 
-.btn-accion   { background: var(--accion); }
-.btn-accion:hover { background: var(--accion-hover); }
+/* Botones funcionales */
 
-.btn-operador { background: var(--operador); color: #1f2937; font-size: 1.6rem; }
-.btn-operador:hover { background: var(--operador-hover); }
-.btn-operador.activo { outline: 3px solid #fff; outline-offset: -3px; }
+.btn-function {
+    background: rgba(0,212,255,0.10);
+    color: var(--primary);
+    border-color: rgba(0,212,255,0.08);
+}
 
-.btn-igual { background: var(--igual); color: #04251b; font-size: 1.6rem; }
-.btn-igual:hover { background: var(--igual-hover); }
+.btn-function:hover {
+    background: rgba(0,212,255,0.20);
+}
 
-/* ===== Pantallas pequeñas ===== */
-@media (max-width: 360px) {
-  .calculadora { padding: 14px; }
-  .teclado { gap: 8px; }
-  .btn { height: 54px; font-size: 1.2rem; }
+/* Operadores */
+
+.btn-operator {
+    background: rgba(124,92,255,0.17);
+    color: #a895ff;
+    font-size: 26px;
+}
+
+.btn-operator:hover {
+    background: rgba(124,92,255,0.30);
+}
+
+/* Igual */
+
+.btn-equal {
+    color: #07111e;
+    font-size: 27px;
+    background: linear-gradient(135deg, #00d4ff, #65e4ff);
+    box-shadow: 0 5px 20px rgba(0,212,255,0.18);
+}
+
+.btn-equal:hover {
+    background: linear-gradient(135deg, #55e3ff, #a0efff);
+    box-shadow: 0 8px 25px rgba(0,212,255,0.35);
+}
+
+/* ==============================
+   PIE DE CALCULADORA
+============================== */
+
+.pie-calculadora {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 23px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+.pie-calculadora span:nth-child(2) {
+    color: var(--primary);
+}
+
+/* ==============================
+   PIE DE PÁGINA
+============================== */
+
+.pie-pagina {
+    margin-top: 22px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 9px;
+    line-height: 2;
+    letter-spacing: 1px;
+}
+
+.pie-pagina strong {
+    color: #dce7f8;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+@media (max-width: 420px) {
+
+    .calculadora {
+        padding: 16px;
+        border-radius: 23px;
+    }
+
+    .btn {
+        height: 60px;
+        border-radius: 15px;
+        font-size: 19px;
+    }
+
+    .teclado {
+        gap: 9px;
+    }
+
+    .logo h1 {
+        font-size: 13px;
+    }
+
+    .version {
+        font-size: 8px;
+    }
+}
+
+@media (max-width: 340px) {
+
+    .encabezado {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .btn {
+        height: 54px;
+    }
+
+    .pie-calculadora {
+        font-size: 7px;
+    }
 }

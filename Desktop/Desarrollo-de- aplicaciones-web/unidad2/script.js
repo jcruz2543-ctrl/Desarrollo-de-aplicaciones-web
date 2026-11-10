@@ -1,217 +1,353 @@
-/* ==========================================================
-   Calculadora Web — lógica
-   Sin eval(): el estado se maneja con una clase.
-   ========================================================== */
+/* =====================================
+   CALCULADORA CRUZ FAJARDO
+   Motor de operaciones matemáticas
+===================================== */
 
-const MAX_DIGITOS = 15;
+const pantalla = document.getElementById("actual");
+const previa = document.getElementById("previa");
+const teclado = document.querySelector(".teclado");
 
-class Calculadora {
-  constructor(previaEl, actualEl) {
-    this.previaEl = previaEl;
-    this.actualEl = actualEl;
-    this.limpiar();
-  }
+let actual = "0";
+let anterior = null;
+let operador = null;
+let reiniciar = false;
+let operacionTerminada = false;
 
-  /* ---------- Estado ---------- */
-  limpiar() {
-    this.actual = "0";      // número que se está escribiendo (texto)
-    this.previo = "";       // primer operando guardado
-    this.operador = null;   // + − × ÷
-    this.historial = "";    // texto de la última operación
-    this.reiniciar = false; // true: el siguiente dígito empieza un número nuevo
-    this.error = "";        // mensaje de error, si lo hay
-    this.actualizarPantalla();
-  }
+// Mostrar números en pantalla
+function actualizarPantalla() {
+    pantalla.textContent = actual;
+}
 
-  /* ---------- Entrada de datos ---------- */
-  agregarNumero(n) {
-    if (this.error) this.limpiar();
-    if (this.reiniciar) {
-      this.actual = "0";
-      this.reiniciar = false;
-      this.historial = this.operador ? this.historial : "";
+// Formatear números
+function formatearNumero(numero) {
+    if (!Number.isFinite(numero)) {
+        throw new Error("Operación no válida");
     }
-    if (this.actual === "0") this.actual = n;
-    else if (this.actual === "-0") this.actual = "-" + n;
-    else if (this.actual.replace(/[-.]/g, "").length < MAX_DIGITOS) this.actual += n;
-    this.actualizarPantalla();
-  }
 
-  agregarPunto() {
-    if (this.error) this.limpiar();
-    if (this.reiniciar) {
-      this.actual = "0";
-      this.reiniciar = false;
-    }
-    if (!this.actual.includes(".")) this.actual += ".";
-    this.actualizarPantalla();
-  }
+    const limpio = Number(numero.toPrecision(12));
 
-  borrar() {
-    if (this.error) return this.limpiar();
-    if (this.reiniciar) return;
-    const sinSigno = this.actual.replace("-", "");
-    this.actual = sinSigno.length > 1 ? this.actual.slice(0, -1) : "0";
-    this.actualizarPantalla();
-  }
+    return String(limpio);
+}
 
-  cambiarSigno() {
-    if (this.error) return;
-    if (parseFloat(this.actual) === 0 && !this.actual.includes(".")) return;
-    this.actual = this.actual.startsWith("-") ? this.actual.slice(1) : "-" + this.actual;
-    this.actualizarPantalla();
-  }
+// Introducir números
+function introducirNumero(numero) {
 
-  porcentaje() {
-    if (this.error) return;
-    this.actual = this.redondear(parseFloat(this.actual) / 100);
-    this.reiniciar = true;
-    this.actualizarPantalla();
-  }
+    if (reiniciar || actual === "Error") {
+        actual = numero;
+        reiniciar = false;
+        operacionTerminada = false;
+    } else if (actual.replace("-", "").length < 15) {
 
-  /* ---------- Operaciones ---------- */
-  elegirOperador(op) {
-    if (this.error) return;
-    // Si ya había un operador y aún no se escribió el 2.º número, solo se cambia
-    if (this.operador && this.reiniciar) {
-      this.operador = op;
-      this.actualizarPantalla();
-      return;
-    }
-    // Encadenar: 2 + 3 + → calcula 5 y sigue
-    if (this.operador && !this.calcular(true)) return;
-
-    this.previo = this.actual;
-    this.operador = op;
-    this.reiniciar = true;
-    this.actualizarPantalla();
-  }
-
-  calcular(encadenado = false) {
-    if (this.error) return false;
-    if (!this.operador) return false;
-
-    const a = parseFloat(this.previo);
-    const b = parseFloat(this.actual);
-    let r;
-
-    switch (this.operador) {
-      case "+": r = a + b; break;
-      case "−": r = a - b; break;
-      case "×": r = a * b; break;
-      case "÷":
-        if (b === 0) {
-          this.error = "No se puede dividir entre 0";
-          this.previo = "";
-          this.operador = null;
-          this.historial = "";
-          this.actualizarPantalla();
-          return false;
+        if (actual === "0") {
+            actual = numero;
+        } else {
+            actual += numero;
         }
-        r = a / b;
-        break;
     }
 
-    if (!encadenado) {
-      this.historial = `${this.formatear(this.previo)} ${this.operador} ${this.formatear(this.actual)} =`;
-      this.previo = "";
-      this.operador = null;
+    actualizarPantalla();
+}
+
+// Introducir punto decimal
+function introducirPunto() {
+
+    if (reiniciar || actual === "Error") {
+        actual = "0.";
+        reiniciar = false;
+        operacionTerminada = false;
+    } else if (!actual.includes(".")) {
+        actual += ".";
     }
-    this.actual = this.redondear(r);
-    this.reiniciar = true;
-    this.actualizarPantalla();
-    return true;
-  }
 
-  /* ---------- Utilidades ---------- */
-  // Evita errores de coma flotante (0.1 + 0.2 → 0.3)
-  redondear(n) {
-    if (!isFinite(n)) {
-      this.error = "Resultado fuera de rango";
-      return "0";
+    actualizarPantalla();
+}
+
+// Ejecutar operaciones
+function calcular(a, b, op) {
+
+    switch (op) {
+
+        case "+":
+            return a + b;
+
+        case "−":
+            return a - b;
+
+        case "×":
+            return a * b;
+
+        case "÷":
+            if (b === 0) {
+                throw new Error("División por cero");
+            }
+            return a / b;
+
+        default:
+            return b;
     }
-    return String(parseFloat(n.toPrecision(12)));
-  }
+}
 
-  // Agrega separador de miles sin perder el punto decimal que se está escribiendo
-  formatear(texto) {
-    if (texto.includes("e")) return texto; // notación científica
-    const [entero, decimal] = texto.split(".");
-    const negativo = entero.startsWith("-");
-    const digitos = entero.replace("-", "");
-    const conMiles = digitos.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return (negativo ? "-" : "") + conMiles + (decimal !== undefined ? "." + decimal : "");
-  }
+// Seleccionar operador
+function seleccionarOperador(nuevoOperador) {
 
-  actualizarPantalla() {
-    if (!this.actualEl) return; // permite probar la clase sin DOM
-    const texto = this.error || this.formatear(this.actual);
-    this.actualEl.textContent = texto;
-    this.actualEl.classList.toggle("error", Boolean(this.error));
-    this.actualEl.classList.toggle("largo", !this.error && texto.length > 9 && texto.length <= 13);
-    this.actualEl.classList.toggle("muy-largo", !this.error && texto.length > 13);
+    if (actual === "Error") return;
 
-    if (this.operador) {
-      this.previaEl.textContent = `${this.formatear(this.previo)} ${this.operador}`;
+    const valor = Number(actual);
+
+    if (operador && anterior !== null && !reiniciar) {
+
+        try {
+            const resultado = calcular(
+                anterior,
+                valor,
+                operador
+            );
+
+            actual = formatearNumero(resultado);
+            actualizarPantalla();
+
+            anterior = Number(actual);
+
+        } catch (error) {
+            mostrarError(error.message);
+            return;
+        }
+
     } else {
-      this.previaEl.textContent = this.historial;
+        anterior = valor;
     }
 
-    // Resalta el operador activo
-    document.querySelectorAll("[data-operador]").forEach((b) => {
-      b.classList.toggle("activo", b.dataset.operador === this.operador && this.reiniciar);
-    });
-  }
+    operador = nuevoOperador;
+
+    previa.textContent =
+        `${actual} ${nuevoOperador}`;
+
+    reiniciar = true;
+    operacionTerminada = false;
 }
 
-/* ==========================================================
-   Conexión con la interfaz (solo en el navegador)
-   ========================================================== */
-if (typeof document !== "undefined") {
-  const calc = new Calculadora(
-    document.getElementById("previa"),
-    document.getElementById("actual")
-  );
+// Obtener resultado
+function obtenerResultado() {
 
-  // Clics del mouse / toques
-  document.querySelector(".teclado").addEventListener("click", (e) => {
-    const btn = e.target.closest("button");
-    if (!btn) return;
-
-    if (btn.dataset.numero !== undefined) return calc.agregarNumero(btn.dataset.numero);
-    if (btn.dataset.operador) return calc.elegirOperador(btn.dataset.operador);
-
-    switch (btn.dataset.accion) {
-      case "limpiar":    calc.limpiar(); break;
-      case "borrar":     calc.borrar(); break;
-      case "porcentaje": calc.porcentaje(); break;
-      case "signo":      calc.cambiarSigno(); break;
-      case "punto":      calc.agregarPunto(); break;
-      case "igual":      calc.calcular(); break;
+    if (operador === null || anterior === null || reiniciar) {
+        return;
     }
-  });
 
-  // Soporte de teclado
-  const mapaOperadores = { "+": "+", "-": "−", "*": "×", "/": "÷" };
+    const segundoNumero = Number(actual);
 
-  document.addEventListener("keydown", (e) => {
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const expresion =
+        `${anterior} ${operador} ${segundoNumero}`;
 
-    if (/^[0-9]$/.test(e.key)) calc.agregarNumero(e.key);
-    else if (e.key === "." || e.key === ",") calc.agregarPunto();
-    else if (mapaOperadores[e.key]) {
-      e.preventDefault(); // evita la búsqueda rápida de Firefox con "/"
-      calc.elegirOperador(mapaOperadores[e.key]);
+    try {
+
+        const resultado = calcular(
+            anterior,
+            segundoNumero,
+            operador
+        );
+
+        actual = formatearNumero(resultado);
+
+        previa.textContent = `${expresion} =`;
+
+        anterior = null;
+        operador = null;
+        reiniciar = true;
+        operacionTerminada = true;
+
+        actualizarPantalla();
+
+    } catch (error) {
+
+        mostrarError(error.message);
+
     }
-    else if (e.key === "Enter" || e.key === "=") {
-      e.preventDefault(); // evita "reclicar" el botón enfocado
-      calc.calcular();
-    }
-    else if (e.key === "Backspace") calc.borrar();
-    else if (e.key === "Escape") calc.limpiar();
-    else if (e.key === "%") calc.porcentaje();
-  });
 }
 
-// Exportar para pruebas con Node
-if (typeof module !== "undefined") module.exports = Calculadora;
+// Porcentaje
+function porcentaje() {
+
+    if (actual === "Error") return;
+
+    const valor = Number(actual);
+
+    actual = formatearNumero(valor / 100);
+
+    actualizarPantalla();
+
+    reiniciar = false;
+}
+
+// Cambiar signo
+function cambiarSigno() {
+
+    if (actual === "Error" || Number(actual) === 0) return;
+
+    actual = actual.startsWith("-")
+        ? actual.substring(1)
+        : "-" + actual;
+
+    actualizarPantalla();
+}
+
+// Borrar último dígito
+function borrar() {
+
+    if (actual === "Error" || reiniciar) {
+        actual = "0";
+        reiniciar = false;
+    } else if (actual.length > 1) {
+
+        actual = actual.slice(0, -1);
+
+        if (actual === "-") {
+            actual = "0";
+        }
+
+    } else {
+        actual = "0";
+    }
+
+    actualizarPantalla();
+}
+
+// Limpiar calculadora
+function limpiar() {
+
+    actual = "0";
+    anterior = null;
+    operador = null;
+    reiniciar = false;
+    operacionTerminada = false;
+
+    previa.textContent = "Bienvenido";
+
+    actualizarPantalla();
+}
+
+// Mostrar errores
+function mostrarError(mensaje) {
+
+    actual = "Error";
+    previa.textContent = mensaje;
+
+    anterior = null;
+    operador = null;
+    reiniciar = true;
+
+    actualizarPantalla();
+}
+
+// Procesar acciones
+function ejecutarAccion(accion) {
+
+    switch (accion) {
+
+        case "limpiar":
+            limpiar();
+            break;
+
+        case "borrar":
+            borrar();
+            break;
+
+        case "porcentaje":
+            porcentaje();
+            break;
+
+        case "signo":
+            cambiarSigno();
+            break;
+
+        case "punto":
+            introducirPunto();
+            break;
+
+        case "igual":
+            obtenerResultado();
+            break;
+    }
+}
+
+// Eventos del teclado visual
+teclado.addEventListener("click", (evento) => {
+
+    const boton = evento.target.closest("button");
+
+    if (!boton) return;
+
+    if (boton.dataset.numero !== undefined) {
+        introducirNumero(boton.dataset.numero);
+        return;
+    }
+
+    if (boton.dataset.operador) {
+        seleccionarOperador(boton.dataset.operador);
+        return;
+    }
+
+    if (boton.dataset.accion) {
+        ejecutarAccion(boton.dataset.accion);
+    }
+
+});
+
+// Compatibilidad con teclado físico
+document.addEventListener("keydown", (evento) => {
+
+    const tecla = evento.key;
+
+    if (/^[0-9]$/.test(tecla)) {
+        introducirNumero(tecla);
+        return;
+    }
+
+    switch (tecla) {
+
+        case ".":
+        case ",":
+            introducirPunto();
+            break;
+
+        case "+":
+            seleccionarOperador("+");
+            break;
+
+        case "-":
+            seleccionarOperador("−");
+            break;
+
+        case "*":
+        case "x":
+        case "X":
+            seleccionarOperador("×");
+            break;
+
+        case "/":
+            evento.preventDefault();
+            seleccionarOperador("÷");
+            break;
+
+        case "Enter":
+        case "=":
+            evento.preventDefault();
+            obtenerResultado();
+            break;
+
+        case "Backspace":
+            borrar();
+            break;
+
+        case "Escape":
+            limpiar();
+            break;
+
+        case "%":
+            porcentaje();
+            break;
+    }
+
+});
+
+// Inicialización
+actualizarPantalla();
