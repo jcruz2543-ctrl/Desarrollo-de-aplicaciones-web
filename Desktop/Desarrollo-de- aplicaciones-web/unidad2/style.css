@@ -1,0 +1,120 @@
+/* ===== Variables de diseño ===== */
+:root {
+  --fondo: #0f172a;
+  --carcasa: #1e293b;
+  --pantalla: #0b1220;
+  --tecla: #334155;
+  --tecla-hover: #475569;
+  --accion: #64748b;
+  --accion-hover: #7b8ba1;
+  --operador: #f59e0b;
+  --operador-hover: #fbbf24;
+  --igual: #10b981;
+  --igual-hover: #34d399;
+  --texto: #f8fafc;
+  --texto-suave: #94a3b8;
+  --radio: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: radial-gradient(circle at top, #1e3a5f 0%, var(--fondo) 60%);
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  color: var(--texto);
+}
+
+/* ===== Carcasa ===== */
+.calculadora {
+  width: 100%;
+  max-width: 340px;
+  padding: 20px;
+  background: var(--carcasa);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== Pantalla ===== */
+.pantalla {
+  min-height: 110px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 6px;
+  background: var(--pantalla);
+  border-radius: var(--radio);
+  overflow: hidden;
+  word-break: break-all;
+  text-align: right;
+}
+
+.operacion-previa {
+  min-height: 20px;
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+
+.resultado {
+  font-size: 2.6rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.resultado.largo   { font-size: 1.9rem; }
+.resultado.muy-largo { font-size: 1.4rem; }
+.resultado.error   { font-size: 1.1rem; color: #f87171; }
+
+/* ===== Teclado ===== */
+.teclado {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.btn {
+  height: 62px;
+  border: none;
+  border-radius: var(--radio);
+  background: var(--tecla);
+  color: var(--texto);
+  font-size: 1.35rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.08s;
+}
+
+.btn:hover  { background: var(--tecla-hover); }
+.btn:active { transform: scale(0.94); }
+.btn:focus-visible {
+  outline: 3px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+.btn-accion   { background: var(--accion); }
+.btn-accion:hover { background: var(--accion-hover); }
+
+.btn-operador { background: var(--operador); color: #1f2937; font-size: 1.6rem; }
+.btn-operador:hover { background: var(--operador-hover); }
+.btn-operador.activo { outline: 3px solid #fff; outline-offset: -3px; }
+
+.btn-igual { background: var(--igual); color: #04251b; font-size: 1.6rem; }
+.btn-igual:hover { background: var(--igual-hover); }
+
+/* ===== Pantallas pequeñas ===== */
+@media (max-width: 360px) {
+  .calculadora { padding: 14px; }
+  .teclado { gap: 8px; }
+  .btn { height: 54px; font-size: 1.2rem; }
+}

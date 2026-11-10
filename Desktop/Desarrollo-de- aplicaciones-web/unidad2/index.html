@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Web</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="calculadora" aria-label="Calculadora">
+    <!-- Pantalla -->
+    <section class="pantalla" aria-live="polite">
+      <div class="operacion-previa" id="previa"></div>
+      <div class="resultado" id="actual">0</div>
+    </section>
+
+    <!-- Teclado -->
+    <section class="teclado">
+      <button class="btn btn-accion" data-accion="limpiar">AC</button>
+      <button class="btn btn-accion" data-accion="borrar" aria-label="Borrar último dígito">⌫</button>
+      <button class="btn btn-accion" data-accion="porcentaje">%</button>
+      <button class="btn btn-operador" data-operador="÷">÷</button>
+
+      <button class="btn" data-numero="7">7</button>
+      <button class="btn" data-numero="8">8</button>
+      <button class="btn" data-numero="9">9</button>
+      <button class="btn btn-operador" data-operador="×">×</button>
+
+      <button class="btn" data-numero="4">4</button>
+      <button class="btn" data-numero="5">5</button>
+      <button class="btn" data-numero="6">6</button>
+      <button class="btn btn-operador" data-operador="−">−</button>
+
+      <button class="btn" data-numero="1">1</button>
+      <button class="btn" data-numero="2">2</button>
+      <button class="btn" data-numero="3">3</button>
+      <button class="btn btn-operador" data-operador="+">+</button>
+
+      <button class="btn" data-accion="signo" aria-label="Cambiar signo">±</button>
+      <button class="btn" data-numero="0">0</button>
+      <button class="btn" data-accion="punto">.</button>
+      <button class="btn btn-igual" data-accion="igual">=</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
